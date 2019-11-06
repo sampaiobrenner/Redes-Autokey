@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Autokey_Cipher
@@ -9,10 +10,10 @@ namespace Autokey_Cipher
     {
         public Form1() => InitializeComponent();
 
+        private static int Timer { get; set; }
         private string Chave => $"{PalavraChave}{txbPainel1.Text}";
         private string PalavraChave { get; set; }
         private string RetornoForcaBruta { get; set; }
-        private string TempoDecorrido { get; set; }
 
         private void btnCriptografar_Click(object sender, EventArgs e)
         {
@@ -30,28 +31,26 @@ namespace Autokey_Cipher
 
         private void btnForcaBruta_Click(object sender, EventArgs e)
         {
+            RetornoForcaBruta = null;
             lblTempoDecorrido.Visible = true;
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Timer = 0;
 
             var cifra = txbPainel2.Text;
 
-            //var task = new Task(() =>
-            //{
-            RetornoForcaBruta = ForcaBruta.ExecutarForcaBruta(cifra, txbPainel1.Text);
-            //});
+            timer1.Interval = 1000;
+            timer1.Tick += Timer1_Tick;
+            timer1.Start();
 
-            //task.Start();
+            txbKey2.Text = "Por favor aguarde...";
 
-            //do
-            //{
-            TempoDecorrido = $"Tempo: {stopwatch.Elapsed}";
-            ExibirRetornoForcaBruta();
-            ExibirTempoDecorrido();
-            //} while (!task.IsCompleted);
+            var task = new Task(() =>
+            {
+                RetornoForcaBruta = ForcaBruta.ExecutarForcaBruta(cifra, txbPainel1.Text);
+                Thread.Sleep(1000);
+                timer1.Stop();
+            });
 
-            stopwatch.Stop();
+            task.Start();
         }
 
         private void btnGerarChave_Click(object sender, EventArgs e) => GerarChave();
@@ -64,10 +63,6 @@ namespace Autokey_Cipher
             txbPainel1.Text = System.IO.File.ReadAllText(dialog.FileName, Encoding.Default);
         }
 
-        private void ExibirRetornoForcaBruta() => txbKey2.Text = RetornoForcaBruta;
-
-        private void ExibirTempoDecorrido() => lblTempoDecorrido.Text = TempoDecorrido;
-
         private void GerarChave()
         {
             var prompt = new FormPrompt("Informe a palavra chave:", PalavraChave);
@@ -76,6 +71,14 @@ namespace Autokey_Cipher
 
             PalavraChave = prompt.txbMensagem.Text;
             txbKey.Text = PalavraChave;
+        }
+
+        private void Timer1_Tick(object Sender, EventArgs e)
+        {
+            Timer += 1;
+            lblTempoDecorrido.Text = $"Tempo decorrido: {Timer.ToString()}";
+            if (RetornoForcaBruta != null)
+                txbKey2.Text = RetornoForcaBruta;
         }
 
         private bool ValidarSeExisteChave()
