@@ -39,7 +39,7 @@ namespace Autokey_Cipher
 
             //var task = new Task(() =>
             //{
-            RetornoForcaBruta = new ForcaBruta().ExecutarForcaBruta(cifra, txbPainel1.Text);
+            RetornoForcaBruta = ForcaBruta.ExecutarForcaBruta(cifra, txbPainel1.Text);
             //});
 
             //task.Start();
