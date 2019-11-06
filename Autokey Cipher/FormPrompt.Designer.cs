@@ -46,6 +46,7 @@
             // txbMensagem
             // 
             this.txbMensagem.Location = new System.Drawing.Point(34, 55);
+            this.txbMensagem.MaxLength = 5;
             this.txbMensagem.Name = "txbMensagem";
             this.txbMensagem.Size = new System.Drawing.Size(374, 20);
             this.txbMensagem.TabIndex = 1;
