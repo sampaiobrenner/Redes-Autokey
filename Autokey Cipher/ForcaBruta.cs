@@ -1,83 +1,61 @@
-﻿using static System.Char;
+﻿using System;
+using System.Diagnostics;
 
 namespace Autokey_Cipher
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
-    public class ForcaBruta
+    public static class ForcaBruta
     {
-        public string ExecutarForcaBruta(string cifra, string textoOriginal)
+        public static string ExecutarForcaBruta(string cifra, string textoOriginal, int tamanhoDaChave, string chaveOriginal, out long tempoDeExecucao)
         {
-            var dict = @"Palavras.txt";
-            var output = @"output2.txt";
-            var dictionary = new List<string>();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
 
+            const string dict = @"Palavras.txt";
+            var dictionary = new List<string>();
             var countRefs = new Dictionary<string, int>();
 
-            if (!File.Exists(output))
-                using (File.CreateText(output))
-                {
-                }
-
-            var value = cifra;
             string attempt;
-            double progress = 0, total = 0;
-            var limiter = 2;
+            const int limiter = 2;
 
             using (var sr = File.OpenText(dict))
             {
                 var wordpre = "";
                 while ((wordpre = sr.ReadLine()) != null)
                 {
-                    total += 1;
                     if (wordpre.Length >= limiter)
                         dictionary.Add(wordpre);
                 }
             }
 
-            for (var keylength = 1; keylength <= 5; keylength++)
+            using (var sr = File.OpenText(dict))
             {
-                using (var sr = File.OpenText(dict))
+                var word = "";
+                while ((word = sr.ReadLine()) != null)
                 {
-                    var word = "";
-                    while ((word = sr.ReadLine()) != null)
-                    {
-                        progress += 1;
-                        if (IsAllLetters(word))
-                        {
-                            if (word.Length == keylength)
-                            {
-                                attempt = DecipherVeginere(value, word);
-                                if (dictionary.Any(attempt.Contains))
-                                {
-                                    Console.WriteLine("\r[S] " + word + "\t\t" + attempt);
-                                    using (var sw = File.AppendText(output))
-                                        sw.WriteLine("\r[S] " + word + "\t\t" + attempt);
+                    if (!IsAllLetters(word) || word.Length != tamanhoDaChave) continue;
 
-                                    countRefs.Add(word, dictionary.Count(s => attempt.Contains(s)));
-                                }
-                            }
-                        }
-                        Console.Write("\r>{0:n}%", (500 / total) * progress);
-                    }
+                    attempt = DecipherVeginere(cifra, word);
+                    if (dictionary.Any(attempt.Contains))
+                        countRefs.Add(word, dictionary.Count(s => attempt.Contains(s)));
                 }
             }
 
-            Console.WriteLine("  [Total: {0}]", total);
-            Console.WriteLine("");
+            stopWatch.Stop();
+            tempoDeExecucao = stopWatch.ElapsedMilliseconds;
 
             foreach (var item in countRefs.OrderByDescending(r => r.Value))
-                if (DecipherVeginere(value, item.Key) == textoOriginal)
-                    return $"Chave: {item.Key} | Cifra: {value} | Texto: {DecipherVeginere(value, item.Key)}";
+                if (DecipherVeginere(cifra, item.Key) == textoOriginal && item.Key == chaveOriginal)
+                    return $"Chave: {item.Key} {Environment.NewLine}Cifra: {cifra} {Environment.NewLine}Texto: {DecipherVeginere(cifra, item.Key)}";
 
             return "Não foram encontrados resultados.";
         }
 
-        private string DecipherVeginere(string text, string key) => new AutoKeyCipher().Decipher(text, key);
+        private static string DecipherVeginere(string text, string key) => new AutoKeyCipher().Decipher(text, key);
 
-        private bool IsAllLetters(string s) => s.All(IsLetter);
+        private static bool IsAllLetters(string s) => s.All(char.IsLetter);
     }
 }

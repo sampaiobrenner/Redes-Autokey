@@ -46,7 +46,7 @@
             // txbMensagem
             // 
             this.txbMensagem.Location = new System.Drawing.Point(34, 55);
-            this.txbMensagem.MaxLength = 5;
+            this.txbMensagem.MaxLength = 15;
             this.txbMensagem.Name = "txbMensagem";
             this.txbMensagem.Size = new System.Drawing.Size(374, 20);
             this.txbMensagem.TabIndex = 1;
@@ -69,6 +69,8 @@
             this.Controls.Add(this.lblMensagem);
             this.Controls.Add(this.txbMensagem);
             this.Controls.Add(this.button1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormPrompt";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

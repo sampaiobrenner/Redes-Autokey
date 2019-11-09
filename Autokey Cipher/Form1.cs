@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 
@@ -9,16 +8,14 @@ namespace Autokey_Cipher
     {
         public Form1() => InitializeComponent();
 
-        private string Chave => $"{PalavraChave}{txbPainel1.Text}";
+        private string Chave => $"{PalavraChave}{txbPainel1.Text.Replace(" ", "").ToLower()}";
         private string PalavraChave { get; set; }
-        private string RetornoForcaBruta { get; set; }
-        private string TempoDecorrido { get; set; }
 
         private void btnCriptografar_Click(object sender, EventArgs e)
         {
             if (!ValidarSeExisteChave()) return;
 
-            txbPainel2.Text = new AutoKeyCipher().Cipher(txbPainel1.Text, Chave);
+            txbPainel2.Text = new AutoKeyCipher().Cipher(txbPainel1.Text.Replace(" ", "").ToLower(), Chave);
         }
 
         private void btnDescriptografar_Click(object sender, EventArgs e)
@@ -30,28 +27,14 @@ namespace Autokey_Cipher
 
         private void btnForcaBruta_Click(object sender, EventArgs e)
         {
-            lblTempoDecorrido.Visible = true;
+            if (string.IsNullOrEmpty(txbPainel2.Text))
+            {
+                MessageBox.Show("Não foi gerada a cifra para executar a força bruta.");
+                return;
+            }
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            var cifra = txbPainel2.Text;
-
-            //var task = new Task(() =>
-            //{
-            RetornoForcaBruta = new ForcaBruta().ExecutarForcaBruta(cifra, txbPainel1.Text);
-            //});
-
-            //task.Start();
-
-            //do
-            //{
-            TempoDecorrido = $"Tempo: {stopwatch.Elapsed}";
-            ExibirRetornoForcaBruta();
-            ExibirTempoDecorrido();
-            //} while (!task.IsCompleted);
-
-            stopwatch.Stop();
+            var retorno = ForcaBruta.ExecutarForcaBruta(txbPainel2.Text, txbPainel1.Text.Replace(" ", "").ToLower(), PalavraChave.Length, PalavraChave, out var tempoDeExecucao);
+            txbKey2.Text = $@"{retorno}{Environment.NewLine}Tempo de execução: {TimeSpan.FromMilliseconds(tempoDeExecucao).Seconds}s";
         }
 
         private void btnGerarChave_Click(object sender, EventArgs e) => GerarChave();
@@ -61,12 +44,8 @@ namespace Autokey_Cipher
             var dialog = new OpenFileDialog();
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            txbPainel1.Text = System.IO.File.ReadAllText(dialog.FileName, Encoding.Default);
+            txbPainel1.Text = System.IO.File.ReadAllText(dialog.FileName, Encoding.Default).ToLower();
         }
-
-        private void ExibirRetornoForcaBruta() => txbKey2.Text = RetornoForcaBruta;
-
-        private void ExibirTempoDecorrido() => lblTempoDecorrido.Text = TempoDecorrido;
 
         private void GerarChave()
         {
@@ -75,7 +54,7 @@ namespace Autokey_Cipher
             if (prompt.DialogResult != DialogResult.OK) return;
 
             PalavraChave = prompt.txbMensagem.Text;
-            txbKey.Text = PalavraChave;
+            txbKey.Text = $"{Environment.NewLine}{PalavraChave}";
         }
 
         private bool ValidarSeExisteChave()

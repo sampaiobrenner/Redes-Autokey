@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txbPainel1 = new System.Windows.Forms.TextBox();
@@ -42,7 +40,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lblTempoDecorrido = new System.Windows.Forms.Label();
             this.txbKey = new System.Windows.Forms.TextBox();
             this.btnGerarChave = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -186,7 +183,6 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.lblTempoDecorrido);
             this.panel2.Controls.Add(this.txbKey);
             this.panel2.Controls.Add(this.btnGerarChave);
             this.panel2.Location = new System.Drawing.Point(12, 12);
@@ -194,19 +190,9 @@
             this.panel2.Size = new System.Drawing.Size(775, 108);
             this.panel2.TabIndex = 28;
             // 
-            // lblTempoDecorrido
-            // 
-            this.lblTempoDecorrido.AutoSize = true;
-            this.lblTempoDecorrido.Font = new System.Drawing.Font("Lucida Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTempoDecorrido.Location = new System.Drawing.Point(513, 9);
-            this.lblTempoDecorrido.Name = "lblTempoDecorrido";
-            this.lblTempoDecorrido.Size = new System.Drawing.Size(0, 18);
-            this.lblTempoDecorrido.TabIndex = 28;
-            this.lblTempoDecorrido.Visible = false;
-            // 
             // txbKey
             // 
-            this.txbKey.Font = new System.Drawing.Font("Lucida Sans", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txbKey.Font = new System.Drawing.Font("Lucida Sans", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txbKey.Location = new System.Drawing.Point(265, 9);
             this.txbKey.MaxLength = 5;
             this.txbKey.Multiline = true;
@@ -241,7 +227,7 @@
             // 
             // txbKey2
             // 
-            this.txbKey2.Font = new System.Drawing.Font("Lucida Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txbKey2.Font = new System.Drawing.Font("Lucida Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txbKey2.Location = new System.Drawing.Point(263, 8);
             this.txbKey2.Multiline = true;
             this.txbKey2.Name = "txbKey2";
@@ -277,7 +263,7 @@
             this.Name = "Form1";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = " ";
+            this.Text = " Autokey";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -289,7 +275,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txbPainel1;
@@ -307,7 +292,6 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.TextBox txbKey2;
         private System.Windows.Forms.Button btnForcaBruta;
-        private System.Windows.Forms.Label lblTempoDecorrido;
     }
 }
 
